@@ -14,23 +14,23 @@ import application.entity.Message;
 import application.service.MessageService;
 
 @RestController
-@RequestMapping("/messages")
+
 public class MessageController {
 	
 	@Autowired
 	private MessageService messageService;
 
-	@GetMapping("/{id}")
+	@GetMapping("/messages/{id}")
 	public Message getMessage(@PathVariable(value="id") long msgId){
 		return messageService.getMessage(msgId);
 	}
 	
-	@GetMapping
+	@GetMapping("/messages")
 	public List<Message> getMessages() throws Exception{
 		return messageService.getMessages();
 	}
 	
-	@PostMapping
+	@PostMapping("/messages")
 	public Message addMessage(@RequestBody Message msg){
 		return messageService.addMessage(msg);
 	}

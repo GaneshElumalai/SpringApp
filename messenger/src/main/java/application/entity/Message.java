@@ -41,14 +41,14 @@ public class Message implements Serializable {
 	private char isDeleted;
 	@ManyToOne(targetEntity=User.class,fetch=FetchType.EAGER)
 	@JoinColumn(name="FK_USER_ID",nullable=false)
-	private User msgUser;
+	private User user;
 	
 	public User getMsgUser() {
-		return msgUser;
+		return user;
 	}
 
 	public void setMsgUser(User msgUser) {
-		this.msgUser = msgUser;
+		this.user = msgUser;
 	}
 
 	public Message(){
