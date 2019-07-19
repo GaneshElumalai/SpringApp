@@ -4,41 +4,30 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
-import application.Exception.MessageNotFound;
 import application.entity.Message;
+import application.exception.MessageNotFound;
 import application.repo.MessageRepo;
 
-@RestController
-@RequestMapping("/messages")
+@Service
 public class MessageService {
 	
 	@Autowired
-	MessageRepo messageRepo;
-
-	@GetMapping("/{id}")
-	public Message getMessage(@PathVariable(value="id") long msgId) throws Exception, MessageNotFound{
-		return messageRepo.findById(msgId).orElseThrow(()->new MessageNotFound());
-		
-//		MessageDAO messageService = new MessageDAO();
-//		return messageService.getMessage(msgId);
-	}
+	private MessageRepo messageRepo;
 	
-	@GetMapping
-	public List<Message> getMessages() throws Exception{
+	public Message getMessage(long id){
+		return messageRepo.findById(id).orElseThrow(()->new MessageNotFound());
+	}
+
+	public List<Message> getMessages() {
 		return messageRepo.findAll();
 	}
-	
-	@PostMapping
-	public Message addMessage(@RequestBody Message msg){
+
+	public Message addMessage(Message msg) {
 		msg.setCreated_date(new Date());
-		return messageRepo.save(msg);
+		messageRepo.save(msg);
+		return msg;
 	}
-	
+
 }
