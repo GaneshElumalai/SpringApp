@@ -30,9 +30,13 @@ public class MessageController {
 		return messageService.getMessages();
 	}
 	
-	@PostMapping("/messages")
-	public Message addMessage(@RequestBody Message msg){
-		return messageService.addMessage(msg);
+	@PostMapping("/{userId}/messages")
+	public Message addMessage(@PathVariable("userId") long userId,@RequestBody Message msg){
+		return messageService.addMessage(userId,msg);
 	}
 	
+	@GetMapping("/{userId}/messages")
+	public List<Message> getUserMessages(@PathVariable("userId") long userId){
+		return messageService.getUserMessages(userId);
+	}
 }

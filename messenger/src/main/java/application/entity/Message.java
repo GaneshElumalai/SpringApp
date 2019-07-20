@@ -2,7 +2,7 @@ package application.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,14 +14,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name="APP_MESSAGE"
 //		, uniqueConstraints=@UniqueConstraint(columnNames={"MsgID","Message"})
 		)
-@JsonIgnoreProperties(value={"created_date","updated_date"})
+//@JsonIgnoreProperties(value={"created_date","updated_date"})
 public class Message implements Serializable {
 	
 	private static final long serialVersionUID=2L;
@@ -33,21 +35,63 @@ public class Message implements Serializable {
 	
 	@Column(nullable=false, name="Message", length=5000)
 	private String message;
+	
+	@Transient
+	private String author;
+	
 	@Column(nullable=false, name="Created_Date")
 	private Date created_date;
+	
 	@Column(nullable=true, name="Updated_Date")
 	private Date updated_date;
+	
+	@JsonIgnore
 	@Column(nullable=false, name="Deleted")
-	private char isDeleted;
+	private char deleted;
+	
+	
+	@Column(name = "Privacy")
+	@JsonProperty("privacy")
+	private Privacy messagePrivacy;
+	
+	@JsonIgnore
 	@ManyToOne(targetEntity=User.class,fetch=FetchType.EAGER)
 	@JoinColumn(name="FK_USER_ID",nullable=false)
 	private User user;
 	
-	public User getMsgUser() {
+	@OneToMany(mappedBy="reactedMessage")
+	private Set<Reaction> reactions;
+	
+	public Set<Reaction> getReactions() {
+		return reactions;
+	}
+
+	public void setReactions(Set<Reaction> reactions) {
+		this.reactions = reactions;
+	}
+
+	public Privacy getMessagePrivacy() {
+		return messagePrivacy;
+	}
+
+	public void setMessagePrivacy(Privacy messagePrivacy) {
+		this.messagePrivacy = messagePrivacy;
+	}
+
+	public String getAuthor() {
+		return user.getUserName();
+		
+	}
+
+	public void setAuthor(User user) {
+		this.author = user.getUserName();
+	}
+
+	public User getUser() {
 		return user;
 	}
 
-	public void setMsgUser(User msgUser) {
+	public void setUser(User msgUser) {
 		this.user = msgUser;
 	}
 
@@ -60,7 +104,7 @@ public class Message implements Serializable {
 		this.message = message;
 		this.created_date = created_date;
 		this.updated_date = updated_date;
-		this.isDeleted = 'N';
+		this.deleted = 'N';
 	}
 	
 	public Message(String message, String author) {
@@ -68,7 +112,7 @@ public class Message implements Serializable {
 		this.message = message;
 		this.created_date = new Date();
 		this.updated_date = null;
-		this.isDeleted = 'N';
+		this.deleted = 'N';
 	}
 	
 	
@@ -96,11 +140,11 @@ public class Message implements Serializable {
 	public void setUpdated_date(Date updated_date) {
 		this.updated_date = updated_date;
 	}
-	public char isDeleted() {
-		return isDeleted ;
+	public char getDeleted() {
+		return deleted ;
 	}
 	public void setDeleted(char isDeleted) {
-		this.isDeleted = isDeleted;
+		this.deleted = isDeleted;
 	}
 
 	@Override
