@@ -3,6 +3,9 @@ package application.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,13 +33,18 @@ public class MessageController {
 		return messageService.getMessages();
 	}
 	
-	@PostMapping("/{userId}/messages")
+	@PostMapping("/users/{userId}/messages")
 	public Message addMessage(@PathVariable("userId") long userId,@RequestBody Message msg){
 		return messageService.addMessage(userId,msg);
 	}
 	
-	@GetMapping("/{userId}/messages")
+	@GetMapping("/users/{userId}/messages")
 	public List<Message> getUserMessages(@PathVariable("userId") long userId){
 		return messageService.getUserMessages(userId);
+	}
+	
+	@DeleteMapping("/messages/{msgId}")
+	public void deleteMessage(@PathVariable("msgId") long msgId){
+		messageService.deleteMessage(msgId);
 	}
 }

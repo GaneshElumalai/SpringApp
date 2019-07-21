@@ -1,32 +1,57 @@
 package application.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-@Table(name="Reaction")
-public class Reaction {
+@Table(name="APP_REACTION")
+public class Reaction implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue
 	private long id;
+	
+	@OneToOne(targetEntity = User.class,fetch = FetchType.EAGER)
+	@JoinColumn(name = "REACTED_USER_ID")
+	private User user;
+	
+	@Transient
 	private String reactedBy;
+	
 	private ReactionType reactionType;
 	private Date reactedDate;
 	
 	@ManyToOne(targetEntity = Message.class)
-	@JoinColumn(name = "FK_MSG_ID")
+	@JoinColumn(name = "REACTED_MSG_ID")
 	@JsonIgnore
-	private Message reactedMessage;
+	private Message message;
 
+	
+	public String getReactedBy() {
+		return user.getUserName();
+	}
+
+	public void setReactedBy(User user) {
+		this.reactedBy = user.getUserName();
+	}
+	
 	public long getId() {
 		return id;
 	}
@@ -34,13 +59,13 @@ public class Reaction {
 	public void setId(long id) {
 		this.id = id;
 	}
-
-	public String getReactedBy() {
-		return reactedBy;
+	@JsonIgnore
+	public User getUser() {
+		return user;
 	}
 
-	public void setReactedBy(String reactedBy) {
-		this.reactedBy = reactedBy;
+	public void setUser(User reactedBy) {
+		this.user = reactedBy;
 	}
 
 	public ReactionType getReactionType() {
@@ -59,14 +84,23 @@ public class Reaction {
 		this.reactedDate = reactedDate;
 	}
 
-	public Message getReactedMessage() {
-		return reactedMessage;
+	public Message getMessage() {
+		return message;
 	}
 
-	public void setReactedMessage(Message reactedMessage) {
-		this.reactedMessage = reactedMessage;
+	public void setMessage(Message reactedMessage) {
+		this.message = reactedMessage;
+	}
+
+	public Reaction(User reactedBy, ReactionType reactionType, Date reactedDate, Message reactedMessage) {
+		super();
+		this.user = reactedBy;
+		this.reactionType = reactionType;
+		this.reactedDate = reactedDate;
+		this.message = reactedMessage;
 	}
 	
-	
-	
+	public Reaction() {
+		super();
+	}
 }

@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -31,7 +32,7 @@ public class Message implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(nullable=false, name="MsgID", length=5000)
-	private long messageId;
+	private long id;
 	
 	@Column(nullable=false, name="Message", length=5000)
 	private String message;
@@ -51,15 +52,15 @@ public class Message implements Serializable {
 	
 	
 	@Column(name = "Privacy")
-	@JsonProperty("privacy")
+	@JsonProperty("visibility")
 	private Privacy messagePrivacy;
 	
 	@JsonIgnore
 	@ManyToOne(targetEntity=User.class,fetch=FetchType.EAGER)
-	@JoinColumn(name="FK_USER_ID",nullable=false)
+	@JoinColumn(name="FK_AUTHOR_ID",nullable=false)
 	private User user;
 	
-	@OneToMany(mappedBy="reactedMessage")
+	@OneToMany(mappedBy="message")
 	private Set<Reaction> reactions;
 	
 	public Set<Reaction> getReactions() {
@@ -116,11 +117,11 @@ public class Message implements Serializable {
 	}
 	
 	
-	public long getMessageId() {
-		return messageId;
+	public long getId() {
+		return id;
 	}
-	public void setMessageId(long messageId) {
-		this.messageId = messageId;
+	public void setId(long messageId) {
+		this.id = messageId;
 	}
 	public String getMessage() {
 		return message;
@@ -149,7 +150,7 @@ public class Message implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Message [messageId=" + messageId + ", message=" + message + "]";
+		return "Message [messageId=" + id + ", message=" + message + "]";
 	}
 	
 	

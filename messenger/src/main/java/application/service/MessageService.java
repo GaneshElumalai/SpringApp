@@ -1,11 +1,11 @@
 package application.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import application.entity.Message;
@@ -42,6 +42,13 @@ public class MessageService {
 	}
 
 	public List<Message> getUserMessages(long userId) {
-		return messageRepo.findByUserId(userId);
+		return messageRepo.findByUserId(userId).stream().filter(msg->msg.getDeleted()=='N').collect(Collectors.toList());
+	}
+	
+	public void deleteMessage(long msgId) {
+//		messageRepo.deleteById(msgId);
+		Message msg = messageRepo.findById(msgId).get();
+		msg.setDeleted('Y');
+		messageRepo.save(msg);
 	}
 }
