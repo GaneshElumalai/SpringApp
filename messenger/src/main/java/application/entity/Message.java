@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -40,9 +41,11 @@ public class Message implements Serializable {
 	private String author;
 	
 	@Column(nullable=false, name="Created_Date")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date created_date;
 	
 	@Column(nullable=true, name="Updated_Date")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date updated_date;
 	
 	@JsonIgnore

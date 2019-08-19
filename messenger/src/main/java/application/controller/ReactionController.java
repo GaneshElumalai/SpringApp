@@ -21,7 +21,10 @@ public class ReactionController {
 	@Autowired
 	private ReactionService reactionService;
 	
-	@PostMapping("/users/{userId}/messages/{msgId}")
+	/*
+	 * This method does not require any request body, send the reaction as query parameter 
+	 */
+	@PostMapping("/users/{userId}/messages/{msgId}/reactions")
 	public Message react(@PathVariable("userId") long userId,@PathVariable("msgId") long msgId,@RequestParam ReactionType reaction) {
 		return reactionService.react(userId, msgId, reaction);
 	}
@@ -31,7 +34,7 @@ public class ReactionController {
 		return reactionService.getReactionForMessage(msgId);
 	}
 	
-	@PutMapping("/users/{userId}/messages/{msgId}")
+	@PutMapping("/users/{userId}/messages/{msgId}/reactions")
 	public Message updateReactionForUserMessage(@PathVariable("userId") long userId,@PathVariable("msgId") long msgId,@RequestParam ReactionType reaction){
 		return reactionService.updateReaction(userId, msgId, reaction);
 	}

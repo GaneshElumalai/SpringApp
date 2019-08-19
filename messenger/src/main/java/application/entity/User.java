@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -40,9 +41,11 @@ public class User implements Serializable {
 	private String password;
 	@Column(name="USER_NAME",nullable=false)
 	private String userName;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	@Column(name = "CREATED_DATE",nullable = false)
 	private Date createdDate;
 	@Column(name = "UPDATED_DATE",nullable = false)
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date updatedDate;
 	
 	@OneToMany(mappedBy="user",fetch = FetchType.EAGER)

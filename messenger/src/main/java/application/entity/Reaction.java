@@ -13,6 +13,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -35,6 +36,7 @@ public class Reaction implements Serializable {
 	private String reactedBy;
 	
 	private ReactionType reactionType;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date reactedDate;
 	
 	@ManyToOne(targetEntity = Message.class)
